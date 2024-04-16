@@ -27,6 +27,7 @@ import { useForm, Controller, reset } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 
+// Definição do esquema de validação utilizando yup
 const schema = yup.object().shape({
   nomeReceita: yup.string().required("O nome da receita é obrigatório"),
   descricaoReceita: yup
@@ -58,7 +59,7 @@ const NovoPost = ({ navigation }) => {
     reset,
     formState: { errors },
   } = useForm({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(schema), // Utilização do esquema de validação com o react-hook-form
   });
   const [nomeReceita, setNomeReceita] = useState("");
   const [descricaoReceita, setDescricaoReceita] = useState("");
@@ -79,13 +80,14 @@ const NovoPost = ({ navigation }) => {
     }, [])
   );
 
+  // Função para mostrar erro relacionado à imagem temporariamente
   const erroTemporarioImagem = (errorMessage) => {
-        setErroImagem(errorMessage);
+    setErroImagem(errorMessage);
     setErroImagemVisible(true);
 
     setTimeout(() => {
       setErroImagemVisible(false);
-      setErroImagem("")
+      setErroImagem("");
     }, 4000);
   };
 
@@ -101,13 +103,13 @@ const NovoPost = ({ navigation }) => {
     }, 4000);
   };
 
+  // Limpar os campos do formulário
   const limparCampos = () => {
     setNomeReceita("");
     setDescricaoReceita("");
     setIngredientes([""]);
     setPassosPreparo([""]);
     setImagemReceita(null);
-
   };
 
   const adicionarIngrediente = () => {
@@ -130,50 +132,61 @@ const NovoPost = ({ navigation }) => {
     setPassosPreparo(novosPassos);
   };
 
+  // Função para abrir o modal de seleção de imagem
   const abrirModal = () => {
     setModalVisible(true);
   };
 
   const escolherImagem = (source) => {
     if (source) {
-      console.log("URI da imagem selecionada:", source); // Adicionando este log para verificar o URI da imagem selecionada
+      console.log("URI da imagem selecionada:", source);
       setImagemReceita(source);
       setModalVisible(false);
     }
   };
 
+  // Função para escolher uma imagem da galeria
   const escolherDaGaleria = async () => {
     try {
+      // Abrir a galeria de imagens
       let result = await ImagePicker.launchImageLibraryAsync({
+        // Apenas imagens são permitidas
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        // Permite ao usuário editar a imagem antes de selecioná-la
         allowsEditing: true,
-        aspect: [3, 4],
-        quality: 1,
+        aspect: [3, 4], // Proporção da imagem
+        quality: 1, // Qualidade
       });
-
-      console.log("Resultado da galeria:", result); // Adicionar este log para verificar o resultado da seleção de imagem
-
+      console.log("Resultado da galeria:", result); 
+      
+      // Se o usuário não cancelou e uma imagem foi selecionada
       if (!result.cancelled && result.assets && result.assets.length > 0) {
         const uri = result.assets[0].uri;
+        // Chama a função escolherImagem para definir a imagem selecionada
         escolherImagem(uri);
-        console.log("Imagem selecionada:", uri); // Adicionar este log para verificar o URI da imagem selecionada
+        console.log("Imagem selecionada:", uri);
       }
     } catch (error) {
       console.log("Erro ao selecionar imagem da galeria:", error);
     }
   };
 
+    //Função para tirar a foto usando a camera
   const tirarFoto = async () => {
     try {
+      // Abrir a câmera
       let result = await ImagePicker.launchCameraAsync({
+        // Apenas imagens são permitidas
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        // Permite ao usuário editar a imagem antes de selecioná-la
         allowsEditing: true,
-        aspect: [3, 4],
-        quality: 1,
+        aspect: [3, 4], // Proporção da imagem
+        quality: 1, //Qualidade
       });
 
-      console.log("Resultado da camera:", result); // log para verificar o resultado da captura de imagem
+      console.log("Resultado da camera:", result);
 
+      // Se o usuário não cancelou e uma imagem foi capturada
       if (
         !result.cancelled &&
         result.assets &&
@@ -181,6 +194,8 @@ const NovoPost = ({ navigation }) => {
         result.assets[0].uri
       ) {
         const uri = result.assets[0].uri;
+        
+        // Chama a função escolherImagem para definir a imagem selecionada
         escolherImagem(uri);
         console.log("Imagem capturada:", uri);
       }
@@ -191,10 +206,13 @@ const NovoPost = ({ navigation }) => {
 
   const onSubmit = async (data) => {
     try {
+      // Verifica se a imagem da receita foi adicionada
       if (!imagemReceita) {
+        // Se não, exibe uma mensagem de erro temporária
         erroTemporarioImagem("Adicione uma imagem da sua Receita");
         return;
       }
+      // Cria um novo objeto FormData para enviar os dados do formulário
       const formData = new FormData();
       formData.append("nomeReceita", data.nomeReceita);
       formData.append("descricaoReceita", data.descricaoReceita);
@@ -204,14 +222,16 @@ const NovoPost = ({ navigation }) => {
       data.passosPreparo.forEach((passo, index) => {
         formData.append(`passosPreparo[${index}]`, passo);
       });
+      // Adiciona a imagem da receita ao FormData
       formData.append("imagemReceita", {
         uri: imagemReceita,
         name: `imagem_${Date.now()}.jpg`,
         type: "image/jpeg",
       });
+      // Envia os dados do formulário para o servidor
       const { data: responseData } = await axios.post(
         "/post/novoPost",
-        formData,
+        formData, // Dados do formulário
         {
           headers: {
             "Content-Type": "multipart/form-data",
@@ -219,15 +239,17 @@ const NovoPost = ({ navigation }) => {
         }
       );
       navigation.navigate("Feed");
+      // Atualiza o estado global de posts com o novo post adicionado
       setPosts([...posts, responseData?.posts]);
-      reset();
-      limparCampos();
+      reset(); // Reseta o formulário após o envio
+      limparCampos(); // Limpa os campos do formulário
     } catch (error) {
       erroTemporario("Erro ao criar um post");
       console.log(error);
     }
   };
 
+  //Dimensões da imagem
   const { width, height } = Dimensions.get("window");
   const menorDimensao = Math.min(width, height);
   const tamanhoDaImagem = menorDimensao * 0.6;

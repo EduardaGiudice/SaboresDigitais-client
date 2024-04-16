@@ -5,7 +5,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   FlatList,
-  Alert,
   Image,
   Dimensions,
 } from "react-native";
@@ -27,57 +26,68 @@ const ListaCompras = ({ navigation }) => {
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
   const [lista, setLista] = useState([]);
 
+  // Carregar a lista de compras ao montar o componente
   useEffect(() => {
     carregarLista();
   }, []);
 
+  // Função para carregar a lista de compras
   const carregarLista = async () => {
     try {
+      // Requisição GET para obter os itens da lista
       const response = await axios.get("lista/listarItens");
+      // Atualiza o estado com os itens obtidos
       setLista(response.data.data);
     } catch (error) {
       console.error("Erro ao carregar lista:", error);
     }
   };
 
+  // Função para adicionar um item à lista de compras
   const adicionarItem = async ({ quantidade, unidadeMedida, nomeItem }) => {
     try {
+      // Requisição POST para adicionar o item
       await axios.post("/lista/adicionarItem", {
         quantidade,
         unidadeMedida,
         nomeItem,
       });
-      carregarLista();
+      carregarLista(); // Recarrega a lista após adicionar o item
       setModalVisible(false);
     } catch (error) {
       console.error("Erro ao adicionar item:", error);
     }
   };
 
+  // Função para remover um item da lista de compras
   const removerItem = async (itemId) => {
     try {
+      // Requisição DELETE para remover o item
       await axios.delete(`/lista/removerItem/${itemId}`);
-      carregarLista();
+      carregarLista(); // Recarrega a lista após remover o item
     } catch (error) {
       console.error("Erro ao remover item:", error);
     }
   };
 
-const limparLista = async () => {
-  setConfirmModalVisible(true); // Exibindo o modal de confirmação ao limpar a lista
-};
+  // Função que chama o modal de confirmação da limpeza dos itens da lista
+  const limparLista = async () => {
+    setConfirmModalVisible(true);
+  };
 
-// Função para limpar a lista quando a confirmação é feita no modal de confirmação
-const confirmLimparLista = async () => {
-  try {
-    await axios.delete("/lista/limparLista");
-    carregarLista();
-    setConfirmModalVisible(false); // Escondendo o modal de confirmação após a limpeza
-  } catch (error) {
-    console.error("Erro ao limpar lista:", error);
-  }
-};
+  // Função para confirmar a limpeza da lista
+  const confirmLimparLista = async () => {
+    try {
+      // Requisição DELETE para excluir todos os itens da lista
+      await axios.delete("/lista/limparLista");
+      carregarLista(); // Recarrega a lista após limpar
+      setConfirmModalVisible(false); // Escondendo o modal de confirmação após a limpeza
+    } catch (error) {
+      console.error("Erro ao limpar lista:", error);
+    }
+  };
 
+  // Função para renderizar um item da lista de compras
   const renderItem = ({ item }) => (
     <View style={styles.item}>
       <Text
@@ -90,6 +100,7 @@ const confirmLimparLista = async () => {
   );
 
   React.useLayoutEffect(() => {
+    // Efeito para configurar o header da tela, adicionando o botão limpar lista
     navigation.setOptions({
       headerRight: () => (
         <TouchableOpacity
@@ -102,9 +113,10 @@ const confirmLimparLista = async () => {
     });
   }, [navigation]);
 
-    const { width, height } = Dimensions.get("window");
-    const menorDimensao = Math.min(width, height);
-    const tamanhoDaImagem = menorDimensao * 1;
+  //Dimensões da imagem
+  const { width, height } = Dimensions.get("window");
+  const menorDimensao = Math.min(width, height);
+  const tamanhoDaImagem = menorDimensao * 1;
 
   return (
     <>

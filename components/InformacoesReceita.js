@@ -16,6 +16,7 @@ import {
   responsiveFontSize,
 } from "react-native-responsive-dimensions";
 
+  //Dimensões da imagem da receita
     const { width, height } = Dimensions.get("window");
     const menorDimensao = Math.min(width, height);
     const tamanhoDaImagem = menorDimensao * 0.7;
@@ -130,7 +131,7 @@ const styles = StyleSheet.create({
     marginBottom: responsiveHeight(2),
   },
   modalTitle: {
-    fontSize: responsiveFontSize(3.5), // Ajuste o tamanho do título conforme necessário
+    fontSize: responsiveFontSize(3.5),
     fontWeight: "bold",
     marginBottom: responsiveHeight(2),
     textAlign: "center",

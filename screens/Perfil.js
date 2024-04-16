@@ -26,7 +26,7 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Perfil = () => {
-  // State Global
+  // Estado global de autenticação
   const [state, setState] = useContext(AuthContext);
   const { usuario, token } = state;
 
@@ -44,8 +44,8 @@ const Perfil = () => {
   const [erroNovaSenha, setErroNovaSenha] = useState("");
   const [erroConfirmarNovaSenha, setErroConfirmarNovaSenha] = useState("");
   const [erroUpdate, setErroUpdate] = useState("");
-  const [tituloAlertModal, setTituloAlertModal] = useState(""); 
-  const [message, setMessage] = useState(""); 
+  const [tituloAlertModal, setTituloAlertModal] = useState("");
+  const [message, setMessage] = useState("");
   const [showAlertModal, setShowAlertModal] = useState(false);
 
   // Carregar dados do usuário ao montar o componente
@@ -54,13 +54,12 @@ const Perfil = () => {
       try {
         const response = await axios.get("/auth/dadosUsuario", {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`, // Token de autorização
           },
         });
 
-        const userData = response.data;
-
-        // Definição dos estados dentro do bloco then da requisição GET
+        const userData = response.data; // Dados do usuário retornados pela API
+        // Define os campos de usuário no estado local
         setNomeUsuario(userData.usuario.nomeUsuario);
         setEmail(userData.usuario.email);
         setImagemSelecionada(userData.usuario.imagemPerfil || null);
@@ -80,50 +79,59 @@ const Perfil = () => {
 
   //logout
   const handleLogout = async () => {
-    setState({ token: "", usuario: null });
-    await AsyncStorage.removeItem("@auth");
+    setState({ token: "", usuario: null }); // Limpa o estado global de autenticação
+    await AsyncStorage.removeItem("@auth"); // Remove os dados de autenticação do armazenamento local
   };
 
   const escolherImagem = (source) => {
     if (source) {
       console.log("URI da imagem selecionada:", source);
-      setImagemSelecionada(source); // Corrigido para definir o estado correto
-      setModalImagemVisible(false);
+      setImagemSelecionada(source); // Define a imagem selecionada no estado
+      setModalImagemVisible(false); // Fecha o modal de escolha de imagem
     }
   };
 
+  // Função para escolher imagem da galeria
   const escolherDaGaleria = async () => {
     try {
+      // Abrir a galeria de imagens
       let result = await ImagePicker.launchImageLibraryAsync({
+        // Apenas imagens são permitidas
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        // Permite ao usuário editar a imagem antes de selecioná-la
         allowsEditing: true,
-        aspect: [1, 1],
-        quality: 1,
+        aspect: [1, 1], // Proporção da imagem
+        quality: 1, //Qualidade
       });
+      console.log("Resultado da galeria:", result);
 
-      console.log("Resultado da galeria:", result); // Adicionar este log para verificar o resultado da seleção de imagem
-
+      // Se o usuário não cancelou e uma imagem foi selecionada
       if (!result.cancelled && result.assets && result.assets.length > 0) {
         const uri = result.assets[0].uri;
+        // Chama a função escolherImagem para definir a imagem selecionada
         escolherImagem(uri);
-        console.log("Imagem selecionada:", uri); // Adicionar este log para verificar o URI da imagem selecionada
+        console.log("Imagem selecionada:", uri);
       }
     } catch (error) {
       console.log("Erro ao selecionar imagem da galeria:", error);
     }
   };
 
+  //Função para tirar a foto usando a camera
   const tirarFoto = async () => {
     try {
+      // Abrir a câmera
       let result = await ImagePicker.launchCameraAsync({
+        // Apenas imagens são permitidas
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        // Permite ao usuário editar a imagem antes de selecioná-la
         allowsEditing: true,
-        aspect: [1, 1],
-        quality: 1,
+        aspect: [1, 1], // Proporção da imagem
+        quality: 1, //Qualidade
       });
+      console.log("Resultado da camera:", result);
 
-      console.log("Resultado da camera:", result); // log para verificar o resultado da captura de imagem
-
+      // Se o usuário não cancelou e uma imagem foi capturada
       if (
         !result.cancelled &&
         result.assets &&
@@ -131,6 +139,7 @@ const Perfil = () => {
         result.assets[0].uri
       ) {
         const uri = result.assets[0].uri;
+        // Chama a função escolherImagem para definir a imagem selecionada
         escolherImagem(uri);
         console.log("Imagem capturada:", uri);
       }
@@ -142,9 +151,11 @@ const Perfil = () => {
   // Função para atualizar dados do usuário
   const handleUpdate = async () => {
     try {
+      // Cria um objeto FormData para enviar os dados do usuário
       const formData = new FormData();
       formData.append("nomeUsuario", nomeUsuario);
       formData.append("email", email);
+      // Se uma imagem foi selecionada, adiciona-a ao FormData
       if (imagemSelecionada) {
         formData.append("imagemPerfil", {
           uri: imagemSelecionada,
@@ -152,9 +163,10 @@ const Perfil = () => {
           name: "profile.jpg",
         });
       }
+      // Faz uma requisição PUT para atualizar os dados do usuario
       const { data } = await axios.put("/auth/atualizarUsuario", formData, {
         headers: {
-          Authorization: `Bearer ${token && token}`,
+          Authorization: `Bearer ${token && token}`, // Adiciona o token de autenticação
           "Content-Type": "multipart/form-data",
         },
       });
@@ -172,14 +184,17 @@ const Perfil = () => {
         },
       });
 
+      // Atualiza os estados locais com os novos dados do usuário
       setNomeUsuario(data.atualizarUsuario.nomeUsuario);
       setEmail(data.atualizarUsuario.email);
       setImagemSelecionada(data.atualizarUsuario.imagemPerfil);
 
+      // Define o título e a mensagem para o modal de alerta de sucesso
       setTituloAlertModal("Sucesso!");
       setMessage(data && data.message);
       setShowAlertModal(true);
     } catch (error) {
+      // Em caso de erro, exibe um modal de alerta com uma mensagem genérica de erro
       setTituloAlertModal("Erro!");
       setMessage("Erro ao atualizar os dados do usuário.");
       setShowAlertModal(true);
@@ -187,9 +202,9 @@ const Perfil = () => {
     }
   };
 
+  // Função para atualizar a senha do usuário
   const atualizarSenha = async (senhaAtual, novaSenha, confirmarNovaSenha) => {
     try {
-
       // Verifica se o campo 'senhaAtual' está vazio
       if (!senhaAtual) {
         setErroAtualSenha("Digite a Senha Atual.");
@@ -220,7 +235,7 @@ const Perfil = () => {
         return;
       }
 
-      // Faz a requisição para a API para atualizar a senha
+      // Faz a requisição PUT para atualizar a senha
       const response = await axios.put(
         "/auth/atualizarSenha",
         {
@@ -230,36 +245,39 @@ const Perfil = () => {
         },
         {
           headers: {
-            Authorization: `Bearer ${token}`, // Adicione o token de autenticação, se necessário
+            Authorization: `Bearer ${token}`, // Adiciona o token de autenticação
           },
         }
       );
 
       // Se a requisição for bem-sucedida, exibe uma mensagem de sucesso
-
       setTituloAlertModal("Sucesso!");
-      setMessage('Senha atualizada com sucesso');
+      setMessage("Senha atualizada com sucesso");
       setShowAlertModal(true);
       setModalSenhaVisible(false);
     } catch (error) {
+      // Se a resposta de erro for 400 (Bad Request), indica que a senha atual está incorreta
       if (error.response && error.response.status === 400) {
         setErroAtualSenha("Senha atual incorreta");
       } else {
-        // Se ocorrer um erro na requisição que não seja relacionado à senha atual incorreta, exibe uma mensagem genérica de erro
+        // exibe uma mensagem genérica de erro
         setErroUpdate("Erro ao atualizar senha. Por favor, tente novamente.");
         console.error("Erro ao atualizar senha:", error);
       }
-    } 
+    }
   };
 
+  // Função para alternar a visibilidade do modal de escolha de imagem
   const toggleModalImagem = () => {
     setModalImagemVisible(!modalImagemVisible);
   };
 
+  // Função para abrir o modal de Atualização de senha
   const abrirModalSenha = () => {
-    setModalSenhaVisible(true); // Passo 3: Função para abrir o modal de atualização de senha
+    setModalSenhaVisible(true);
   };
 
+  //Dimensões da imagem de perfil
   const { width, height } = Dimensions.get("window");
   const menorDimensao = Math.min(width, height);
   const tamanhoDaImagem = menorDimensao * 0.5;
@@ -321,9 +339,7 @@ const Perfil = () => {
 
           <View style={{ alignItems: "center" }}>
             <TouchableOpacity style={styles.botao} onPress={handleUpdate}>
-              <Text style={styles.textoBotao}>
-                ATUALIZAR
-              </Text>
+              <Text style={styles.textoBotao}>ATUALIZAR</Text>
             </TouchableOpacity>
           </View>
           <Modal

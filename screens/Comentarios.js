@@ -24,31 +24,40 @@ const Comentarios = ({ route }) => {
   const [comentarios, setComentarios] = useState([]);
   const [novoComentario, setNovoComentario] = useState("");
 
+  // Busca os comentários quando o componente monta
   useEffect(() => {
     fetchComentarios();
   }, []);
 
+  // Função para buscar os comentários do servidor
   const fetchComentarios = async () => {
     try {
-      const response = await axios.get(`/comentarios/listarComentarios/${postId}`);
+      // Faz uma requisição GET para buscar os comentários
+      const response = await axios.get(
+        `/comentarios/listarComentarios/${postId}`
+      );
+      // Atualiza o estado com os comentários obtidos
       setComentarios(response.data.comentarios);
     } catch (error) {
       console.log(error);
     }
   };
 
+  // Função para enviar um novo comentário
   const enviarComentario = async () => {
     try {
+      // Faz uma requisição POST para enviar o novo comentário
       await axios.post(`/comentarios/novoComentario/${postId}`, {
         comentario: novoComentario,
       });
-      fetchComentarios();
-      setNovoComentario("");
+      fetchComentarios(); // Atualiza a lista de comentários após o envio
+      setNovoComentario(""); // Limpa o input para adicionar novo comentário
     } catch (error) {
       console.log(error);
     }
   };
 
+  //Dimensões da foto de perfil no comentário
   const { width, height } = Dimensions.get("window");
   const menorDimensao = Math.min(width, height);
   const tamanhoAvatar = menorDimensao * 0.12;
@@ -80,7 +89,9 @@ const Comentarios = ({ route }) => {
               />
               <View style={styles.comentarioView}>
                 <View>
-                  <Text style={{fontSize: responsiveFontSize(1.7)}}>{item.usuario.nomeUsuario}</Text>
+                  <Text style={{ fontSize: responsiveFontSize(1.7) }}>
+                    {item.usuario.nomeUsuario}
+                  </Text>
                 </View>
                 <View style={{ width: responsiveWidth(75) }}>
                   <Text
@@ -129,7 +140,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   content: {
-    paddingHorizontal: responsiveWidth(4), // Adjust horizontal padding responsively
+    paddingHorizontal: responsiveWidth(4),
     paddingTop: responsiveHeight(2),
     marginTop: responsiveHeight(1.5)
   },

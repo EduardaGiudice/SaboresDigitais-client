@@ -22,7 +22,6 @@ import axios from "axios";
 import * as ImagePicker from "expo-image-picker";
 import FontAwesome6 from "react-native-vector-icons/FontAwesome6";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import AlertConfirmModal from "./AlertConfirmModal";
 import AlertModal from "./AlertModal";
 
 const EditarModal = ({
@@ -44,9 +43,10 @@ const EditarModal = ({
   const [alertVisible, setAlertVisible] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
   const [shouldCloseModal, setShouldCloseModal] = useState(false);
-   const [error, setError] = useState("");
+  const [error, setError] = useState("");
   const [errorVisible, setErrorVisible] = useState(false);
 
+  // Chama os dados do post quando o modal é aberto
   useEffect(() => {
     setNomeReceita(post?.nomeReceita);
     setDescricaoReceita(post?.descricaoReceita);
@@ -83,38 +83,48 @@ const EditarModal = ({
     }
   };
 
+  //Função para selecionar a foto da galeria
   const escolherDaGaleria = async () => {
     try {
+      // Abrir a galeria de imagens
       let result = await ImagePicker.launchImageLibraryAsync({
+        // Apenas imagens são permitidas
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        // Permite ao usuário editar a imagem antes de selecioná-la
         allowsEditing: true,
-        aspect: [3, 4],
-        quality: 0.5,
+        aspect: [3, 4], // Proporção da imagem
+        quality: 1, //Qualidade
       });
 
       console.log("Resultado da galeria:", result);
 
+      // Se o usuário não cancelou e uma imagem foi selecionada
       if (!result.cancelled && result.assets && result.assets.length > 0) {
         const uri = result.assets[0].uri;
+        // Chama a função escolherImagem para definir a imagem selecionada
         escolherImagem(uri);
-        console.log("Imagem selecionada:", uri); // Adicionar este log para verificar o URI da imagem selecionada
+        console.log("Imagem selecionada:", uri);
       }
     } catch (error) {
       console.log("Erro ao selecionar imagem da galeria:", error);
     }
   };
 
+  //Função para tirar a foto usando a camera
   const tirarFoto = async () => {
     try {
+      // Abrir a câmera
       let result = await ImagePicker.launchCameraAsync({
+        // Apenas imagens são permitidas
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        // Permite ao usuário editar a imagem antes de selecioná-la
         allowsEditing: true,
-        aspect: [3, 4],
-        quality: 0.5,
+        aspect: [3, 4], // Proporção da imagem
+        quality: 1, //Qualidade
       });
-
       console.log("Resultado da camera:", result);
 
+      // Se o usuário não cancelou e uma imagem foi capturada
       if (
         !result.cancelled &&
         result.assets &&
@@ -122,6 +132,7 @@ const EditarModal = ({
         result.assets[0].uri
       ) {
         const uri = result.assets[0].uri;
+        // Chama a função escolherImagem para definir a imagem selecionada
         escolherImagem(uri);
         console.log("Imagem capturada:", uri);
       }
@@ -168,6 +179,7 @@ const EditarModal = ({
           "Content-Type": "multipart/form-data",
         },
       });
+      //Chamar a função para atualizar a lista de meus posts
       await listarMeusPosts();
       showAlertModal(data?.message);
     } catch (error) {
@@ -176,14 +188,17 @@ const EditarModal = ({
     }
   };
 
+  // Função para alternar a visibilidade do modal de escolha de imagem
   const toggleModalImagem = () => {
     setModalImagemVisible(!modalImagemVisible);
   };
 
+  // Função para fechar o modal
   const closeModal = () => {
     setModalVisible(false);
   };
 
+  // Função para mostrar o modal de alerta
   const showAlertModal = (message) => {
     setAlertMessage(message);
     setAlertVisible(true);
@@ -195,6 +210,7 @@ const EditarModal = ({
     closeModal();
   };
 
+  //Dimensões da imagem
   const { width, height } = Dimensions.get("window");
   const menorDimensao = Math.min(width, height);
   const tamanhoDaImagem = menorDimensao * 0.6;
@@ -419,7 +435,7 @@ const EditarModal = ({
           visible={alertVisible}
           message={alertMessage}
           titulo="Atualizar Post"
-          onClose={closeModals} // Função para fechar ambos os modais
+          onClose={closeModals}
         />
       </ScrollView>
     </Modal>

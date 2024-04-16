@@ -16,6 +16,7 @@ import {
 import BotaoSubmit from "./BotaoSubmit";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
+// Array de objetos contendo opções de unidades de medida
 const unidadesDeMedida = [
   { label: "Unidade(s)", value: "unidade(s)" },
   { label: "Grama(s)", value: "grama(s)" },
@@ -36,6 +37,7 @@ const ModalAdicionarItem = ({ modalVisible, closeModal, adicionarItem }) => {
     nomeItem: "",
   });
 
+  // Função adicionar item
   const handleAdicionarItem = () => {
     // Limpar erros
     setErros({ quantidade: "", unidadeMedida: "", nomeItem: "" });
@@ -69,6 +71,7 @@ const ModalAdicionarItem = ({ modalVisible, closeModal, adicionarItem }) => {
 
     // Adicionar o item
     adicionarItem({ quantidade, unidadeMedida, nomeItem });
+    // Limpa os inputs após a adição do item
     setQuantidade("");
     setUnidadeMedida("");
     setNomeItem("");
@@ -146,7 +149,6 @@ const ModalAdicionarItem = ({ modalVisible, closeModal, adicionarItem }) => {
             <BotaoSubmit
               handleSubmit={handleAdicionarItem}
               tituloBotao={"SALVAR"}
-              
             />
           </View>
         </View>

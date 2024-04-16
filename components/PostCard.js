@@ -4,7 +4,6 @@ import {
   Text,
   StyleSheet,
   Image,
-  Alert,
   TouchableOpacity,
   Dimensions,
 } from "react-native";
@@ -32,16 +31,16 @@ const PostCard = ({ telaMeusPosts, post, listarMeusPosts }) => {
   const [comentariosCount, setComentariosCount] = useState(0);
   const [modalConfirmVisible, setModalConfirmVisible] = useState(false);
 
+  // Hook useFocusEffect para executar ações quando o componente está em foco
+  useFocusEffect(
+    useCallback(() => {
+      checkIfLiked();
+      fetchLikesCount();
+      fetchComentariosCount();
+    }, [post._id])
+  );
 
-    useFocusEffect(
-      useCallback(() => {
-        checkIfLiked();
-        fetchLikesCount();
-        fetchComentariosCount()
-      }, [post._id])
-    );
-
-
+  // Verifica se o usuário já curtiu o post
   const checkIfLiked = async () => {
     try {
       const response = await axios.get(`/post/checkLike/${post._id}`);
@@ -51,6 +50,7 @@ const PostCard = ({ telaMeusPosts, post, listarMeusPosts }) => {
     }
   };
 
+  // Obtém o número de curtidas do post
   const fetchLikesCount = async () => {
     try {
       const response = await axios.get(`/post/numLikes/${post._id}`);
@@ -60,24 +60,34 @@ const PostCard = ({ telaMeusPosts, post, listarMeusPosts }) => {
     }
   };
 
-    const fetchComentariosCount = async () => {
-      try {
-        const response = await axios.get(`/comentarios/numComentarios/${post._id}`);
-        setComentariosCount(response.data.comentariosCount);
-      } catch (error) {
-        console.log(error);
-      }
-    };
+  // Obtém o número de comentários do post
+  const fetchComentariosCount = async () => {
+    try {
+      const response = await axios.get(
+        `/comentarios/numComentarios/${post._id}`
+      );
+      setComentariosCount(response.data.comentariosCount);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
+  // Ação de curtir ou descurtir o post
   const handleLike = async () => {
     try {
+      // Verifica se o usuário já curtiu o post anteriormente
       if (liked) {
         await axios.delete(`/post/dislike/${post._id}`);
+        // Atualiza o estado liked para indicar que o post não foi curtido ainda
         setLiked(false);
+        // Atualiza o número de curtidas, subtraindo 1
         setLikesCount((prevCount) => prevCount - 1);
       } else {
+        // Se o usuário não curtiu o post anteriormente, então envia uma requisição para curtir o post
         await axios.post(`/post/like/${post._id}`);
+        // Atualiza o estado liked para indicar que o post está curtido pelo usuário
         setLiked(true);
+        // Atualiza o número de curtidas, adicionando 1
         setLikesCount((prevCount) => prevCount + 1);
       }
     } catch (error) {
@@ -85,6 +95,7 @@ const PostCard = ({ telaMeusPosts, post, listarMeusPosts }) => {
     }
   };
 
+  // Mostra o modal de confirmação para excluir o post
   const handleDeletarPrompt = () => {
     setModalConfirmVisible(true);
   };
@@ -92,8 +103,11 @@ const PostCard = ({ telaMeusPosts, post, listarMeusPosts }) => {
   //Deletar post
   const handleDeletar = async (id) => {
     try {
+      // Envia uma requisição para deletar o post com o ID fornecido
       const { data } = await axios.delete(`/post/deletarPost/${id}`);
+      // Fecha o modal de confirmação
       setModalConfirmVisible(false);
+      // Atualiza a lista de posts após a exclusão
       listarMeusPosts();
     } catch (error) {
       console.log(error);
@@ -284,7 +298,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     marginTop: responsiveHeight(2),
-    alignItems: "flex-end", // Adicionado para alinhar os itens na parte inferior
+    alignItems: "flex-end",
   },
   receitaNome: {
     fontSize: responsiveFontSize(3),

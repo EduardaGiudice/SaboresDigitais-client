@@ -26,53 +26,53 @@ const AtualizarSenhaModal = ({
 }) => {
   const [senhaAtual, setSenhaAtual] = useState("");
   const [novaSenha, setNovaSenha] = useState("");
-
   const [confirmarNovaSenha, setConfirmarNovaSenha] = useState("");
-    const [erroAtualSenhaVisible, setErroAtualSenhaVisible] = useState(false);
-    const [erroNovaSenhaVisible, setErroNovaSenhaVisible] = useState(false);
-    const [erroConfirmarNovaSenhaVisible, setErroConfirmarNovaSenhaVisible] =
-      useState(false);
-    const [erroUpdateVisible, setErroUpdateVisible] = useState(false);
+  const [erroAtualSenhaVisible, setErroAtualSenhaVisible] = useState(false);
+  const [erroNovaSenhaVisible, setErroNovaSenhaVisible] = useState(false);
+  const [erroConfirmarNovaSenhaVisible, setErroConfirmarNovaSenhaVisible] =
+    useState(false);
+  const [erroUpdateVisible, setErroUpdateVisible] = useState(false);
 
-    useEffect(() => {
-      if (erroAtualSenha) {
-        setErroAtualSenhaVisible(true);
-        const timer = setTimeout(() => {
-          setErroAtualSenhaVisible(false);
-        }, 4000); // 3 segundos
-        return () => clearTimeout(timer);
-      }
-    }, [erroAtualSenha]);
+  // Controlar a visibilidade das mensagens de erro com base nos erros recebidos
+  useEffect(() => {
+    if (erroAtualSenha) {
+      setErroAtualSenhaVisible(true);
+      const timer = setTimeout(() => {
+        setErroAtualSenhaVisible(false);
+      }, 4000);
+      return () => clearTimeout(timer);
+    }
+  }, [erroAtualSenha]);
 
-    useEffect(() => {
-      if (erroNovaSenha) {
-        setErroNovaSenhaVisible(true);
-        const timer = setTimeout(() => {
-          setErroNovaSenhaVisible(false);
-        }, 4000); // 3 segundos
-        return () => clearTimeout(timer);
-      }
-    }, [erroNovaSenha]);
+  useEffect(() => {
+    if (erroNovaSenha) {
+      setErroNovaSenhaVisible(true);
+      const timer = setTimeout(() => {
+        setErroNovaSenhaVisible(false);
+      }, 4000);
+      return () => clearTimeout(timer);
+    }
+  }, [erroNovaSenha]);
 
-    useEffect(() => {
-      if (erroConfirmarNovaSenha) {
-        setErroConfirmarNovaSenhaVisible(true);
-        const timer = setTimeout(() => {
-          setErroConfirmarNovaSenhaVisible(false);
-        }, 4000); // 3 segundos
-        return () => clearTimeout(timer);
-      }
-    }, [erroConfirmarNovaSenha]);
+  useEffect(() => {
+    if (erroConfirmarNovaSenha) {
+      setErroConfirmarNovaSenhaVisible(true);
+      const timer = setTimeout(() => {
+        setErroConfirmarNovaSenhaVisible(false);
+      }, 4000);
+      return () => clearTimeout(timer);
+    }
+  }, [erroConfirmarNovaSenha]);
 
-    useEffect(() => {
-      if (erroUpdate) {
-        setErroUpdateVisible(true);
-        const timer = setTimeout(() => {
-          setErroUpdateVisible(false);
-        }, 4000); // 3 segundos
-        return () => clearTimeout(timer);
-      }
-    }, [erroUpdate]);
+  useEffect(() => {
+    if (erroUpdate) {
+      setErroUpdateVisible(true);
+      const timer = setTimeout(() => {
+        setErroUpdateVisible(false);
+      }, 4000);
+      return () => clearTimeout(timer);
+    }
+  }, [erroUpdate]);
 
   const handleUpdate = () => {
     onUpdate(senhaAtual, novaSenha, confirmarNovaSenha);
@@ -145,10 +145,7 @@ const AtualizarSenhaModal = ({
           {erroConfirmarNovaSenhaVisible && (
             <Text style={styles.errorMessage}>{erroConfirmarNovaSenha}</Text>
           )}
-          <BotaoSubmit
-            handleSubmit={handleUpdate}
-            tituloBotao={"ATUALIZAR"}
-          />
+          <BotaoSubmit handleSubmit={handleUpdate} tituloBotao={"ATUALIZAR"} />
         </View>
       </View>
     </Modal>

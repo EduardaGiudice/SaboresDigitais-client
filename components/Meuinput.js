@@ -14,7 +14,6 @@ const MeuInput = ({
   value,
   setValue,
   autoCapitalize,
-  error,
 }) => {
   return (
     <View>

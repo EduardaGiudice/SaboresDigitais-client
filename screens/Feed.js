@@ -15,9 +15,12 @@ const Feed = () => {
   const [originalPosts, setOriginalPosts] = useState([]);
   const [buscarItem, setBuscarItem] = useState("");
 
+  // Função para buscar todos os posts
   const listarTodosPosts = async () => {
     try {
+      // Faz uma requisição GET para obter todos os posts
       const { data } = await axios.get("/post/posts");
+      // Atualiza o estado 'posts' com os posts obtidos
       setPosts(data?.posts);
       setOriginalPosts(data?.posts); // Salva os posts originais
     } catch (error) {
@@ -25,20 +28,25 @@ const Feed = () => {
     }
   };
 
+  // Função para buscar receitas por nome
   const buscarPorNome = async (text) => {
+    // Atualiza o estado 'buscarItem' com o texto da busca
     setBuscarItem(text);
     try {
+      // Restaura os posts originais se o campo de busca estiver vazio
       if (text.trim() === "") {
-        setPosts(originalPosts); // Restaura os posts originais
+        setPosts(originalPosts);
       } else {
+        // Faz uma requisição GET para buscar posts pelo nome
         const { data } = await axios.get(`/post/buscarPorNome/${text}`);
-        setPosts(data?.posts);
+        setPosts(data?.posts); // Atualiza o estado 'posts' com os posts encontrados
       }
     } catch (error) {
       console.log(error);
     }
   };
 
+  // Hook para listar todos os posts quando o componente é focado
   useFocusEffect(
     useCallback(() => {
       listarTodosPosts();

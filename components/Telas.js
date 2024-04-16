@@ -12,7 +12,6 @@ import Comentarios from "../screens/Comentarios";
 import { AuthContext } from "../context/authContext";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import { NavigationContainer } from "@react-navigation/native";
 
 import {
   responsiveHeight,
@@ -25,9 +24,13 @@ const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 const Telas = () => {
+  // Utilizando o contexto de autenticação
   const [state] = useContext(AuthContext);
+
+  // Verificando se o usuário está autenticado
   const usuarioautenticado = state?.usuario && state?.token;
 
+  // Se o usuário estiver autenticado, retorna as telas principais
   if (usuarioautenticado) {
     return (
       <Stack.Navigator>
@@ -55,6 +58,7 @@ const Telas = () => {
     );
   }
 
+  // Se o usuário não estiver autenticado, retorna as telas de login e registro
   return (
     <Stack.Navigator
       initialRouteName="Login"
@@ -74,6 +78,7 @@ const Telas = () => {
   );
 };
 
+// Componente para as abas principais da aplicação
 const MainTabs = () => (
   <Tab.Navigator
     screenOptions={{

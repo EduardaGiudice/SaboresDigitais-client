@@ -2,7 +2,6 @@ import {
   View,
   Text,
   StyleSheet,
-  Alert,
   Image,
   ScrollView,
   Dimensions,
@@ -21,6 +20,7 @@ import MeuInput from "../../components/Meuinput";
 import BotaoSubmit from "../../components/BotaoSubmit";
 import AlertModal from "../../components/AlertModal";
 
+// Esquema de validação Yup para os campos do formulário
 const schema = yup.object().shape({
   nomeUsuario: yup
     .string()
@@ -38,6 +38,7 @@ const schema = yup.object().shape({
 });
 
 const Registro = ({ navigation }) => {
+  // Hooks do react-hook-form para gerenciamento do formulário
   const {
     control,
     handleSubmit,
@@ -56,16 +57,18 @@ const Registro = ({ navigation }) => {
     setError(errorMessage);
     setErrorVisible(true);
 
-    // Define um temporizador para limpar o estado de erro após 3 segundos
+    // Define um temporizador para limpar o estado de erro após 4 segundos
     setTimeout(() => {
       setErrorVisible(false); // Torna o erro invisível
       setError(""); // Limpa o erro
     }, 4000);
   };
 
+  // Função para lidar com o envio do formulário
   const onSubmit = async (data) => {
     try {
       const { nomeUsuario, email, senha } = data;
+      // Requisição POST para fazer o registro de usuário
       const { data: responseData } = await axios.post("/auth/registro", {
         nomeUsuario,
         email,
@@ -80,13 +83,15 @@ const Registro = ({ navigation }) => {
     }
   };
 
-    const closeModal = () => {
-      setModalVisible(false);
-      if (!error) {
-        navigation.navigate("Login");
-      }
-    };
-
+  // Função para fechar o modal e navegar para a tela Login
+  const closeModal = () => {
+    setModalVisible(false);
+    if (!error) {
+      navigation.navigate("Login");
+    }
+  };
+  
+  //Dimensões do Logo
   const { width, height } = Dimensions.get("window");
   const menorDimensao = Math.min(width, height);
   const tamanhoDoLogo = menorDimensao * 0.5;
@@ -198,7 +203,7 @@ const Registro = ({ navigation }) => {
       <AlertModal
         visible={modalVisible}
         message={message}
-        titulo={'Sucesso!'}
+        titulo={"Sucesso!"}
         onClose={closeModal}
       />
     </View>

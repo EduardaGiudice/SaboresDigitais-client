@@ -14,6 +14,7 @@ import {
   responsiveFontSize,
 } from "react-native-responsive-dimensions";
 
+// Definição do esquema de validação utilizando yup
 const schema = yup.object().shape({
   email: yup.string().email("Email inválido").required("Email é obrigatório"),
   senha: yup
@@ -21,6 +22,7 @@ const schema = yup.object().shape({
     .required("Senha é obrigatória")});
 
 const Login = ({ navigation }) => {
+  // Hooks do react-hook-form para gerenciar o formulário
   const {
     control,
     handleSubmit,
@@ -28,26 +30,25 @@ const Login = ({ navigation }) => {
   } = useForm({
     resolver: yupResolver(schema),
   });
-  //State global
+
+  // State global para autenticação
   const [state, setState] = useContext(AuthContext);
-   const [error, setError] = useState("");
-   const [errorVisible, setErrorVisible] = useState(false);
+  const [error, setError] = useState(""); // Mensagem de erro
+  const [errorVisible, setErrorVisible] = useState(false);
 
-   // Função para mostrar o erro temporariamente
-   const erroTemporario = (errorMessage) => {
-     setError(errorMessage); 
-     setErrorVisible(true);
+  // Função para mostrar o erro temporariamente
+  const erroTemporario = (errorMessage) => {
+    setError(errorMessage);
+    setErrorVisible(true);
 
-     // Define um temporizador para limpar o estado de erro após 3 segundos
-     setTimeout(() => {
-       setErrorVisible(false); // Torna o erro invisível
-       setError(""); // Limpa o erro
-     }, 4000);
-   };
-  
+    // Define um temporizador para limpar o estado de erro após 4 segundos
+    setTimeout(() => {
+      setErrorVisible(false); // Torna o erro invisível
+      setError(""); // Limpa o erro
+    }, 4000);
+  };
 
-  //função do botão
-
+  // Função para lidar com o envio do formulário
   const onSubmit = async (data) => {
     try {
       await handleSubmit(handleLogin)();
@@ -58,9 +59,13 @@ const Login = ({ navigation }) => {
 
   const handleLogin = async (formData) => {
     try {
+      // Requisição POST para fazer o Login
       const { data } = await axios.post("/auth/login", formData);
+      // Atualiza o estado global de autenticação
       setState(data);
+      // Armazena os dados de autenticação localmente
       await AsyncStorage.setItem("@auth", JSON.stringify(data));
+      // Navega para a tela de feed após o login bem-sucedido
       navigation.navigate("Feed");
       console.log("Login efetuado com sucesso");
     } catch (error) {
@@ -74,9 +79,10 @@ const Login = ({ navigation }) => {
   };
   getLocalStorageData();
 
- const { width, height } = Dimensions.get("window");
- const menorDimensao = Math.min(width, height);
- const tamanhoDoLogo = menorDimensao * 0.6;
+  //Dimensões do Logo
+  const { width, height } = Dimensions.get("window");
+  const menorDimensao = Math.min(width, height);
+  const tamanhoDoLogo = menorDimensao * 0.6;
 
   return (
     <View style={styles.container}>

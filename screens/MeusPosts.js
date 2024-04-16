@@ -11,22 +11,26 @@ import {
 const MeusPosts = ({navigation}) => {
   const [posts, setPosts] = useState([]);
 
-  //Listar posts de usuario
+  // Função para listar os posts do usuário
   const listarMeusPosts = async () => {
     try {
+      // Faz uma requisição GET para obter os posts do usuário
       const { data } = await axios.get("/post/meusPosts");
+      // Atualiza o estado com os posts obtidos
       setPosts(data?.usuarioPosts);
     } catch (error) {
       console.log(error);
     }
   };
 
+  // Listar os posts do usuário quando a tela estiver em foco
   useFocusEffect(
     useCallback(() => {
       listarMeusPosts();
     }, [])
   );
 
+  //Dimensões da imagem
   const { width, height } = Dimensions.get("window");
   const menorDimensao = Math.min(width, height);
   const tamanhoDaImagem = menorDimensao * 1;
@@ -34,8 +38,8 @@ const MeusPosts = ({navigation}) => {
   return (
     <View style={styles.container}>
       {posts.length === 0 ? ( // Renderiza a imagem apenas se a lista de posts estiver vazia
-        <TouchableOpacity // TouchableOpacity wrapping the image
-          onPress={() => navigation.navigate("NovoPost")} // Navigating to 'NovoPost' screen on press
+        <TouchableOpacity
+          onPress={() => navigation.navigate("NovoPost")}
           style={styles.imageView}
         >
           <Image

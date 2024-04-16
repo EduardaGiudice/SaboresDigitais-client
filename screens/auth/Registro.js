@@ -33,7 +33,7 @@ const schema = yup.object().shape({
     .min(6, "A senha precisa de no mínimo 6 caracteres"),
   confirmarSenha: yup
     .string()
-    .required("É obrigatório confirmar a senha")
+    .required("Confirmar a senha é obrigatório")
     .oneOf([yup.ref("senha"), null], "As senhas não coincidem"),
 });
 
@@ -94,7 +94,7 @@ const Registro = ({ navigation }) => {
   //Dimensões do Logo
   const { width, height } = Dimensions.get("window");
   const menorDimensao = Math.min(width, height);
-  const tamanhoDoLogo = menorDimensao * 0.5;
+  const tamanhoDoLogo = menorDimensao * 0.55;
 
   return (
     <View style={styles.container}>
@@ -236,7 +236,7 @@ const styles = StyleSheet.create({
     marginTop: responsiveHeight(10),
   },
   logo: {
-    borderRadius: responsiveWidth(25),
+    borderRadius: responsiveWidth(27.5),
     marginBottom: responsiveHeight(3),
   },
   error: {

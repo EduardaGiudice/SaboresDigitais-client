@@ -18,7 +18,7 @@ import {
   responsiveWidth,
   responsiveFontSize,
 } from "react-native-responsive-dimensions";
-import { StyleSheet } from "react-native";
+import { StatusBar, StyleSheet } from "react-native";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -33,48 +33,60 @@ const Telas = () => {
   // Se o usuário estiver autenticado, retorna as telas principais
   if (usuarioautenticado) {
     return (
-      <Stack.Navigator>
-        <Stack.Screen
-          name="MainTabs"
-          component={MainTabs}
-          options={{ headerShown: false }}
+      <>
+        <StatusBar
+          backgroundColor="#F27507"
+          barStyle="dark-content" 
         />
-        <Stack.Screen
-          name="Comentarios"
-          component={Comentarios}
-          options={{
-            title: "Comentários",
-            headerStyle: {
-              backgroundColor: "#F27507",
-              height: responsiveHeight(8),
-            },
-            headerTintColor: "white",
-            headerTitleStyle: {
-              fontWeight: "bold",
-            },
-          }}
-        />
-      </Stack.Navigator>
+        <Stack.Navigator>
+          <Stack.Screen
+            name="MainTabs"
+            component={MainTabs}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Comentarios"
+            component={Comentarios}
+            options={{
+              title: "Comentários",
+              headerStyle: {
+                backgroundColor: "#F27507",
+                height: responsiveHeight(7),
+              },
+              headerTintColor: "white",
+              headerTitleStyle: {
+                fontWeight: "bold",
+              },
+            }}
+          />
+        </Stack.Navigator>
+      </>
     );
   }
 
   // Se o usuário não estiver autenticado, retorna as telas de login e registro
   return (
-    <Stack.Navigator
-      initialRouteName="Login"
-      screenOptions={{ headerShown: false }}
-    >
-      <Stack.Screen
-        name="Login"
-        component={Login}
-        options={{ headerShown: false }}
+    <>
+      <StatusBar
+        backgroundColor="#FDE998"
+        barStyle="dark-content"
       />
-      <Stack.Screen
-        name="Registro"
-        component={Registro}
-        options={{ headerShown: false }}
-      />
-    </Stack.Navigator>
+      <Stack.Navigator
+        initialRouteName="Login"
+        screenOptions={{ headerShown: false }}
+      >
+        <Stack.Screen
+          name="Login"
+          component={Login}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Registro"
+          component={Registro}
+          options={{ headerShown: false }}
+        />
+      </Stack.Navigator>
+    </>
   );
 };
 
@@ -94,7 +106,7 @@ const MainTabs = () => (
         title: "Feed de Receitas",
         headerStyle: {
           backgroundColor: "#F27507",
-          height: responsiveHeight(10),
+          height: responsiveHeight(7),
         },
         headerTintColor: "white",
         headerTitleStyle: {
@@ -112,7 +124,7 @@ const MainTabs = () => (
         title: "Novo Post",
         headerStyle: {
           backgroundColor: "#F27507",
-          height: responsiveHeight(10),
+          height: responsiveHeight(7),
         },
         headerTintColor: "white",
         headerTitleStyle: {
@@ -133,7 +145,7 @@ const MainTabs = () => (
         title: "Meus Posts",
         headerStyle: {
           backgroundColor: "#F27507",
-          height: responsiveHeight(10),
+          height: responsiveHeight(7),
         },
         headerTintColor: "white",
         headerTitleStyle: {
@@ -151,7 +163,7 @@ const MainTabs = () => (
         title: "Lista de Compras",
         headerStyle: {
           backgroundColor: "#F27507",
-          height: responsiveHeight(10),
+          height: responsiveHeight(7),
         },
         headerTintColor: "white",
         headerTitleStyle: {
@@ -172,7 +184,7 @@ const MainTabs = () => (
         title: "Perfil",
         headerStyle: {
           backgroundColor: "#F27507",
-          height: responsiveHeight(10),
+          height: responsiveHeight(7),
         },
         headerTintColor: "white",
         headerTitleStyle: {

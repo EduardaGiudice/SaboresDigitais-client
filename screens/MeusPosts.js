@@ -43,7 +43,7 @@ const MeusPosts = ({navigation}) => {
           style={styles.imageView}
         >
           <Image
-            source={require("../assets/AdicionarReceita.png")}
+            source={require("../assets/images/AdicionarReceita.png")}
             style={[
               styles.emptyImage,
               {

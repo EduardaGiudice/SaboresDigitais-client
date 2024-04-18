@@ -49,6 +49,8 @@ const Registro = ({ navigation }) => {
 
   const [error, setError] = useState("");
   const [errorVisible, setErrorVisible] = useState(false);
+    const [emailError, setEmailError] = useState("");
+  const [errorEmailVisible, setErrorEmailVisible] = useState(false);
   const [message, setMessage] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -63,6 +65,17 @@ const Registro = ({ navigation }) => {
       setError(""); // Limpa o erro
     }, 4000);
   };
+    const erroEmailTemporario = (errorMessage) => {
+    setEmailError(errorMessage);
+    setErrorEmailVisible(true);
+
+    // Define um temporizador para limpar o estado de erro após 4 segundos
+    setTimeout(() => {
+      setErrorEmailVisible(false); // Torna o erro invisível
+      setEmailError(""); // Limpa o erro
+    }, 4000);
+  };
+
 
   // Função para lidar com o envio do formulário
   const onSubmit = async (data) => {
@@ -78,8 +91,12 @@ const Registro = ({ navigation }) => {
       setModalVisible(true);
       console.log("Cadastro efetuado com sucesso");
     } catch (error) {
-      erroTemporario("Campos inválidos"); // Definindo a mensagem de erro
+       if (error.response && error.response.status === 409) {
+      erroEmailTemporario("Já existe um usuário com esse email");
+    } else {
+      erroTemporario("Campos inválidos"); 
       console.log(error);
+    }
     }
   };
 
@@ -105,7 +122,7 @@ const Registro = ({ navigation }) => {
               styles.logo,
               { width: tamanhoDoLogo, height: tamanhoDoLogo },
             ]}
-            source={require("../../assets/Logo.png")}
+            source={require("../../assets/images/icone.png")}
           />
         </View>
         <Text style={styles.titulo}>Registre-se</Text>
@@ -146,6 +163,9 @@ const Registro = ({ navigation }) => {
           />
           {errors.email && (
             <Text style={styles.error}>{errors.email.message}</Text>
+          )}
+          {emailError !== "" && ( // Verificando se há mensagem de erro
+            <Text style={[styles.error, styles.principalError]}>{emailError}</Text>
           )}
 
           <Controller

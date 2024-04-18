@@ -93,7 +93,7 @@ const Login = ({ navigation }) => {
               styles.logo,
               { width: tamanhoDoLogo, height: tamanhoDoLogo },
             ]}
-            source={require("../../assets/Logo.png")}
+            source={require("../../assets/images/icone.png")}
           />
         </View>
         <Text style={styles.titulo}>Entrar</Text>

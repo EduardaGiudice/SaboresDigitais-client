@@ -136,7 +136,7 @@ const ListaCompras = ({ navigation }) => {
         {lista.length === 0 ? (
           <View style={styles.imageView}>
             <Image
-              source={require("../assets/ListaDeCompras.png")}
+              source={require("../assets/images/ListaDeCompras.png")}
               style={[
                 styles.emptyImage,
                 {

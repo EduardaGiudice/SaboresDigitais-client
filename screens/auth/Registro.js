@@ -236,6 +236,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: "#FDE998",
   },
+  logoContainer: {
+    alignItems: "center",
+    marginTop: responsiveHeight(10),
+  },
+  logo: {
+    borderRadius: responsiveWidth(27.5),
+    marginBottom: responsiveHeight(3),
+  },
   titulo: {
     marginBottom: responsiveHeight(3),
     fontSize: responsiveFontSize(4.5),
@@ -250,14 +258,6 @@ const styles = StyleSheet.create({
   },
   link: {
     color: "blue",
-  },
-  logoContainer: {
-    alignItems: "center",
-    marginTop: responsiveHeight(10),
-  },
-  logo: {
-    borderRadius: responsiveWidth(27.5),
-    marginBottom: responsiveHeight(3),
   },
   error: {
     color: "red",

@@ -162,9 +162,17 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: "#FDE998",
   },
+  logoContainer: {
+    alignItems: "center",
+    marginTop: responsiveHeight(10), // Define a margem superior do container do logo como 10% da altura da tela
+  },
+  logo: {
+    borderRadius: responsiveWidth(27.5), // Define a curvatura da borda do logo como 27.5% da largura da tela
+    marginBottom: responsiveHeight(3), // Define a margem inferior do logo como 3% da altura da tela
+  },
   titulo: {
-    marginBottom: responsiveHeight(3),
-    fontSize: responsiveFontSize(4.5),
+    marginBottom: responsiveHeight(3), // Define a margem inferior do título como 3% da altura da tela
+    fontSize: responsiveFontSize(4.5), // Define o tamanho da fonte do título como 4.5% do tamanho da tela
     fontWeight: "bold",
     textAlign: "center",
   },
@@ -177,14 +185,7 @@ const styles = StyleSheet.create({
   link: {
     color: "blue",
   },
-  logoContainer: {
-    alignItems: "center",
-    marginTop: responsiveHeight(10),
-  },
-  logo: {
-    borderRadius: responsiveWidth(30),
-    marginBottom: responsiveHeight(3),
-  },
+
   error: {
     color: "red",
     textAlign: "center",

@@ -137,14 +137,17 @@ const NovoPost = ({ navigation }) => {
     setModalVisible(true);
   };
 
-  const escolherImagem = (source) => {
-    if (source) {
-      console.log("URI da imagem selecionada:", source);
-      setImagemReceita(source);
-      setModalVisible(false);
-    }
-  };
-
+const escolherImagem = (source) => {
+  // Verifica se a fonte (source) da imagem está presente
+  if (source) {
+    // Se estiver presente, exibe a URI da imagem selecionada no console
+    console.log("URI da imagem selecionada:", source);
+    // Define a imagem selecionada usando a função setImagemReceita
+    setImagemReceita(source);
+    // Esconde o modal após selecionar a imagem
+    setModalVisible(false);
+  }
+};
   // Função para escolher uma imagem da galeria
   const escolherDaGaleria = async () => {
     try {
@@ -183,9 +186,7 @@ const NovoPost = ({ navigation }) => {
         aspect: [3, 4], // Proporção da imagem
         quality: 1, //Qualidade
       });
-
       console.log("Resultado da camera:", result);
-
       // Se o usuário não cancelou e uma imagem foi capturada
       if (
         !result.cancelled &&
@@ -194,7 +195,6 @@ const NovoPost = ({ navigation }) => {
         result.assets[0].uri
       ) {
         const uri = result.assets[0].uri;
-        
         // Chama a função escolherImagem para definir a imagem selecionada
         escolherImagem(uri);
         console.log("Imagem capturada:", uri);

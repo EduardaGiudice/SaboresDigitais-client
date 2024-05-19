@@ -4,14 +4,12 @@ import axios from "axios";
 
 //context
 const AuthContext = createContext();
-
 //Provider
 const AuthProvider = ({ children }) => {
   const [state, setState] = useState({
     usuario: null,
     token: "",
   });
-
   //dados iniciais de armazenamento local
   useEffect(() => {
     const loadLocalStorageData = async () => {
@@ -25,19 +23,16 @@ const AuthProvider = ({ children }) => {
     };
     loadLocalStorageData();
   }, []);
-
   useEffect(() => {
     // Configurar o Axios sempre que o token mudar
     axios.defaults.headers.common[`Authorization`] = `Bearer ${state.token}`;
     axios.defaults.baseURL =
-      "https://sabores-digitais-api-3aab6ef3d667.herokuapp.com";
+      "https://sabores-digitais-api-666095ca7851.herokuapp.com/";
   }, [state.token]);
-
   return (
     <AuthContext.Provider value={[state, setState]}>
       {children}
     </AuthContext.Provider>
   );
 };
-
 export { AuthContext, AuthProvider };
